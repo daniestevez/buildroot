@@ -10,4 +10,7 @@ PYTHON_PYBIND_LICENSE = BSD-3-Clause
 PYTHON_PYBIND_LICENSE_FILES = LICENSE
 PYTHON_PYBIND_SETUP_TYPE = setuptools
 
+# gnuradio requires pybind11 at compile time
+PYTHON_PYBIND_INSTALL_STAGING = YES
+
 $(eval $(python-package))

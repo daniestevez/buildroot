@@ -4,8 +4,9 @@
 #
 ################################################################################
 
-GNURADIO_VERSION = 3.8.2.0
-GNURADIO_SITE = https://github.com/gnuradio/gnuradio/releases/download/v$(GNURADIO_VERSION)
+GNURADIO_VERSION = 3.9.3.0
+GNURADIO_SOURCE = v$(GNURADIO_VERSION).tar.gz
+GNURADIO_SITE = https://github.com/gnuradio/gnuradio/archive/refs/tags
 GNURADIO_LICENSE = GPL-3.0+
 GNURADIO_LICENSE_FILES = COPYING
 
@@ -21,17 +22,17 @@ endif
 # host-python-mako and host-python-six are needed for volk to compile
 GNURADIO_DEPENDENCIES = \
 	$(if $(BR2_PACKAGE_PYTHON3),host-python3,host-python) \
+	python-pybind \
 	host-python-mako \
 	host-python-six \
-	host-swig \
 	boost \
 	log4cpp \
-	gmp
+	gmp \
+	volk
 
 GNURADIO_CONF_OPTS = \
 	-DPYTHON_EXECUTABLE=$(HOST_DIR)/bin/python \
 	-DENABLE_DEFAULT=OFF \
-	-DENABLE_VOLK=ON \
 	-DENABLE_GNURADIO_RUNTIME=ON \
 	-DENABLE_TESTING=OFF \
 	-DXMLTO_EXECUTABLE=NOTFOUND
@@ -125,7 +126,8 @@ GNURADIO_CONF_OPTS += -DENABLE_PYTHON=ON
 # mandatory to install python modules in site-packages and to use
 # correct path for python libraries
 GNURADIO_CONF_OPTS += -DGR_PYTHON_RELATIVE=ON \
-	-DGR_PYTHON_DIR=lib/python$(GNURADIO_PYVER)/site-packages
+	-DGR_PYTHON_DIR=lib/python$(GNURADIO_PYVER)/site-packages \
+	-DCMAKE_CXX_FLAGS="-isystem $(STAGING_DIR)/usr/lib/python3.9/site-packages/numpy/core/include"
 else
 GNURADIO_CONF_OPTS += -DENABLE_PYTHON=OFF
 endif
